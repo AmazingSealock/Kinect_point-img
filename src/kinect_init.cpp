@@ -272,6 +272,17 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
     point_cloud->points.resize(width*height);
 
     *point_count = 0;
+    // int numcount = 0;
+
+    //录制点云
+    pcl::PointCloud<pcl::PointXYZ> cloud; // 创建点云（不是指针） 
+    //填充点云数据
+    cloud.width = point_cloud->width;                                 //设置点云宽度
+    cloud.height = point_cloud->height;                                //设置点云高度
+    cloud.is_dense = false;                          //非密集型
+    cloud.points.resize(cloud.width * cloud.height); //变形，无序      
+
+
 
     for (int i = 0; i < width * height; i++)
     {
@@ -284,7 +295,12 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
             point_cloud->points[i].y = (-1.0*xy_table_data[i].xy.y * (float)depth_data[i]);
             point_cloud->points[i].z = ((float)depth_data[i]);
             (*point_count)++;
+            // numcount++;
 
+            cloud.points[i].x = (1.0*xy_table_data[i].xy.x * (float)depth_data[i]);
+            cloud.points[i].y = (1.0*xy_table_data[i].xy.y * (float)depth_data[i]);
+            cloud.points[i].z = ((float)depth_data[i]);
+            
             
         }
         else
@@ -292,8 +308,34 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
             point_cloud->points[i].x = nanf("");
             point_cloud->points[i].y = nanf("");
             point_cloud->points[i].z = nanf("");
+
+            // cloud.points[i].x = nanf("");
+            // cloud.points[i].y = nanf("");
+            // cloud.points[i].z = nanf("");
         }
+
+    
+
     }
+    static int count = 0;
+    std::string new_name;
+    stringstream ss;
+    ss << count;
+    count++; 
+    std::string path = "../record/pcd";
+    string filename = new_name.assign(path).append("/") + string("KIN_") + string(ss.str() + ".pcd");
+    //将点云保存到PCD文件中
+    //savePCDFileASCII 保存为ASICC格式，可以直接用记事本打开
+    //savePCDFileBinary 保存为Binary格式，不可用记事本打开，但更快速
+    pcl::io::savePCDFileASCII(filename, cloud);
+    std::cerr << "Saved " << cloud.points.size() << " data points to test_pcd.pcd." << std::endl;
+
+
+    //默认false(可以不写)，保存为ASICC格式  true，保存为Binary格式
+    // pcl::PCDWriter writer;
+    // writer.write(filename, *point_cloud,false);
+
+    // std::cout << "numcount = " << numcount << std::endl;
 }
 
 void KinectInit::release(void)

@@ -56,6 +56,15 @@ void RobotLocator::updateImage(void)
 
     angleAlpha = (25.f/180.f)*CV_PI;
 
+    static int count = 0;
+    std::string new_name;
+    stringstream ss;
+    ss << count;
+    count++; 
+    std::string path = "../record/img";
+    string filename = new_name.assign(path).append("/") + string("KIN_") + string(ss.str() + ".png");
+    imwrite(filename, srcImage);
+
     // Mat DImage1 = thiskinectDK->cv_depth;
     // DImage = Mat(DImage1.rows, DImage1.cols , CV_8UC1); 
     // for(int i=0; i<DImage1.rows ; i++)

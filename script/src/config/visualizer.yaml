@@ -1,0 +1,26 @@
+
+# pcd dir
+#pcd_dir : "C:/Users/maser/Documents/GitHub/SemanticKITTI-visualizer/src/example3/pcd"
+pcd_dir : "C:/Users/maser/Documents/GitHub/3D-MiniNet/pytorch_code/00/root/autodl-tmp/SemanticKITTI/dataset/sequences/00/velodyne"
+pcd_extension : ".bin"
+
+# label dir 
+#label_dir : "C:/Users/maser/Documents/GitHub/SemanticKITTI-visualizer/src/example3/label"
+label_dir : "C:/Users/maser/Documents/GitHub/3D-MiniNet/pytorch_code/lidar-bonnetal/train/predictions"
+label_extension : ".label"
+
+# this store the dataset config
+dataset_cfg_path : "C:/Users/maser/Documents/GitHub/SemanticKITTI-visualizer/src/config/semantic-kitti.yaml"
+
+# this store the viewpoint initialization config, which can copy from open3d GUI (json file) to modify initialization of the viewpoint
+viewpoint_cfg_path : "C:/Users/maser/Documents/GitHub/SemanticKITTI-visualizer/src/config/viewpoint.json"
+
+# left top point position of GUI
+position : 
+  left : 300
+  top : 100
+  width : 1400
+  height : 800
+
+# open3d pcd point size
+point_size : 2

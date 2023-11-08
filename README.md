@@ -10,4 +10,5 @@
 ```
 cd script
 sh init.sh
+sh record.sh
 ```

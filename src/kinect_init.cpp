@@ -1,5 +1,6 @@
 #include "kinect_init.h"
 
+std::ofstream outfile("../record/calib/calib.txt");
 
 
 KinectInit::KinectInit():pCloud(new pointCloud)
@@ -120,7 +121,7 @@ int KinectInit::init()
         printf("Failed to get calibration\n");
         return EXIT_FAILURE;
     }
-
+    
     k4a_image_create(K4A_IMAGE_FORMAT_CUSTOM,
                      calibration.depth_camera_calibration.resolution_width,
                      calibration.depth_camera_calibration.resolution_height,
@@ -136,11 +137,39 @@ int KinectInit::init()
 	std::cout << "------- Have geted xy_tbale.-------" << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
+    outfile << "Pose: " << (float)1.f << " " << (float)0.f << " " << (float)0.f << " " << (float)1.f << " "
+                        << (float)0.f << " " << (float)1.f << " " << (float)0.f << " " << (float)1.f << " "
+                        << (float)0.f << " " << (float)0.f << " " << (float)1.f << " " << (float)1.f << std::endl;
+
+
+    outfile << "intrinsics: " 
+            << calibration.color_camera_calibration.intrinsics.parameters.param.fx << " " 
+            << (float)0.f << " " 
+            << calibration.color_camera_calibration.intrinsics.parameters.param.cx << " " 
+            << (float)0.f << " " 
+            << calibration.color_camera_calibration.intrinsics.parameters.param.fy << " "  
+            << calibration.color_camera_calibration.intrinsics.parameters.param.cy << " " 
+            << (float)0.f << " "
+            << (float)0.f << " "
+            << (float)1.f << std::endl;
+            
+    outfile << "Tr_depth_to_rgb: " 
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[0] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[1] << " " 
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[2] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].translation[0] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[3] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[4] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[5] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].translation[1] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[6] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[7] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].rotation[8] << " "
+            << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].translation[2]
+            << std::endl;
+            
 //get transformation
     transformation = k4a_transformation_create(&calibration);
-
-    
-
     // Capture a imu sample
     int flag = 0;
     while(1)

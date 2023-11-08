@@ -4,10 +4,6 @@
 
 #define SHOOT_RGB_Camera 1
 
-#define DEBUG
-#define IMAGE
-#define TIME
-
 
 struct PicRoi
 {

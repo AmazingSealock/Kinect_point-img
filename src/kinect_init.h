@@ -47,11 +47,8 @@ using namespace Eigen;
 typedef pcl::PointXYZRGB 				pointType;
 typedef pcl::PointCloud<pointType> 	pointCloud;
 typedef pointCloud::Ptr 			pPointCloud;
-
-#define DEBUG
-#define IMAGE
-#define TIME
-#define RECORD
+ 
+// #define RECORD
 
 class KinectInit
 {

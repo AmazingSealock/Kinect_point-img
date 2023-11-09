@@ -1,7 +1,8 @@
 #include "kinect_init.h"
 
+#ifdef RECORD
 std::ofstream outfile("../record/calib/calib.txt");
-
+#endif
 
 KinectInit::KinectInit():pCloud(new pointCloud)
 {
@@ -137,6 +138,8 @@ int KinectInit::init()
 	std::cout << "------- Have geted xy_tbale.-------" << std::endl;
 	std::cout << "-----------------------------------" << std::endl;
 
+    #ifdef RECORD
+
     outfile << "Pose: " << (float)1.f << " " << (float)0.f << " " << (float)0.f << " " << (float)1.f << " "
                         << (float)0.f << " " << (float)1.f << " " << (float)0.f << " " << (float)1.f << " "
                         << (float)0.f << " " << (float)0.f << " " << (float)1.f << " " << (float)1.f << std::endl;
@@ -168,6 +171,8 @@ int KinectInit::init()
             << calibration.extrinsics[K4A_CALIBRATION_TYPE_DEPTH][K4A_CALIBRATION_TYPE_COLOR].translation[2]
             << std::endl;
             
+    #endif
+
 //get transformation
     transformation = k4a_transformation_create(&calibration);
     // Capture a imu sample
@@ -303,6 +308,7 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
     *point_count = 0;
     // int numcount = 0;
 
+    #ifdef RECORD
     //录制点云
     pcl::PointCloud<pcl::PointXYZ> cloud; // 创建点云（不是指针） 
     //填充点云数据
@@ -310,7 +316,7 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
     cloud.height = point_cloud->height;                                //设置点云高度
     cloud.is_dense = false;                          //非密集型
     cloud.points.resize(cloud.width * cloud.height); //变形，无序      
-
+    #endif
 
 
     for (int i = 0; i < width * height; i++)
@@ -326,10 +332,11 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
             (*point_count)++;
             // numcount++;
 
+            #ifdef RECORD
             cloud.points[i].x = (1.0*xy_table_data[i].xy.x * (float)depth_data[i]);
             cloud.points[i].y = (1.0*xy_table_data[i].xy.y * (float)depth_data[i]);
             cloud.points[i].z = ((float)depth_data[i]);
-            
+            #endif
             
         }
         else
@@ -346,6 +353,8 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
     
 
     }
+
+    #ifdef RECORD
     static int count = 0;
     std::string new_name;
     stringstream ss;
@@ -358,7 +367,7 @@ void KinectInit::generate_point_cloud(const k4a_image_t depth_image,
     //savePCDFileBinary 保存为Binary格式，不可用记事本打开，但更快速
     pcl::io::savePCDFileASCII(filename, cloud);
     std::cerr << "Saved " << cloud.points.size() << " data points to test_pcd.pcd." << std::endl;
-
+    #endif
 
     //默认false(可以不写)，保存为ASICC格式  true，保存为Binary格式
     // pcl::PCDWriter writer;

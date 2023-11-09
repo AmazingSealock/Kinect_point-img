@@ -48,7 +48,7 @@ typedef pcl::PointXYZRGB 				pointType;
 typedef pcl::PointCloud<pointType> 	pointCloud;
 typedef pointCloud::Ptr 			pPointCloud;
  
-// #define RECORD
+#define RECORD
 
 class KinectInit
 {
